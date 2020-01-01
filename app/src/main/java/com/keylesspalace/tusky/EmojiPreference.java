@@ -1,14 +1,10 @@
 package com.keylesspalace.tusky;
 
 import android.app.AlarmManager;
-import androidx.appcompat.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
 import com.keylesspalace.tusky.util.EmojiCompatFont;
 
@@ -43,7 +43,18 @@ public class EmojiPreference extends Preference {
 
     private boolean updated, currentNeedsUpdate;
 
+    public EmojiPreference(Context context) {
+        super(context);
 
+        // Find out which font is currently active
+        this.selected = EmojiCompatFont.byId(PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getInt(FONT_PREFERENCE, 0));
+        // We'll use this later to determine if anything has changed
+        this.original = this.selected;
+
+        setSummary(selected.getDisplay(context));
+    }
 
     public EmojiPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
